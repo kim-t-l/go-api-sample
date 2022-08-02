@@ -1,23 +1,83 @@
-basePath: /api/v1
+basePath: /
+definitions:
+  main.restaurant:
+    description: Restaurant information with name, city, location, instagram link
+      and a short description
+    properties:
+      city:
+        type: string
+      description:
+        type: string
+      instagram:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8080
 info:
-  contact: {}
-  description: |-
-    Restaurant information
-    with name, city, location, instagram link and a short description
+  contact:
+    name: Kim
+  description: This is a sample API
+  title: Go API sample
+  version: "1.0"
 paths:
   /restaurants:
     get:
-      consumes:
-      - application/json
-      description: do ping
+      operationId: get-restaurants
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: json
+            items:
+              $ref: '#/definitions/main.restaurant'
+            type: array
       summary: List all restaurants defined
+      tags:
+      - restaurants
+    post:
+      operationId: create-restaurant
+      parameters:
+      - description: Restaurant
+        in: body
+        name: restaurant
+        required: true
+        schema:
+          $ref: '#/definitions/main.restaurant'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.restaurant'
+            type: array
+        "400":
+          description: an error occurred while creating restaurant
+      summary: Add a new restaurant
+  /restaurants/{city}:
+    get:
+      operationId: get-restaurants-by-city
+      parameters:
+      - description: City
+        in: path
+        name: city
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.restaurant'
+        "404":
+          description: restaurants not found
+      summary: List all restaurants located in given city
       tags:
       - restaurants
 swagger: "2.0"

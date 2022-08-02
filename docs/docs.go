@@ -10,7 +10,9 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "Kim"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -18,10 +20,6 @@ const docTemplate = `{
     "paths": {
         "/restaurants": {
             "get": {
-                "description": "do ping",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -29,13 +27,104 @@ const docTemplate = `{
                     "restaurants"
                 ],
                 "summary": "List all restaurants defined",
+                "operationId": "get-restaurants",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "json"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.restaurant"
+                            }
                         }
                     }
+                }
+            },
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add a new restaurant",
+                "operationId": "create-restaurant",
+                "parameters": [
+                    {
+                        "description": "Restaurant",
+                        "name": "restaurant",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.restaurant"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.restaurant"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "an error occurred while creating restaurant"
+                    }
+                }
+            }
+        },
+        "/restaurants/{city}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "List all restaurants located in given city",
+                "operationId": "get-restaurants-by-city",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "City",
+                        "name": "city",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.restaurant"
+                        }
+                    },
+                    "404": {
+                        "description": "restaurants not found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.restaurant": {
+            "description": "Restaurant information with name, city, location, instagram link and a short description",
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "instagram": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         }
@@ -44,12 +133,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
-	Host:             "",
-	BasePath:         "/api/v1",
+	Version:          "1.0",
+	Host:             "localhost:8080",
+	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "",
-	Description:      "Restaurant information\nwith name, city, location, instagram link and a short description",
+	Title:            "Go API sample",
+	Description:      "This is a sample API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

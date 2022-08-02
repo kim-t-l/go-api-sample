@@ -1,17 +1,18 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Restaurant information\nwith name, city, location, instagram link and a short description",
-        "contact": {}
+        "description": "This is a sample API",
+        "title": "Go API sample",
+        "contact": {
+            "name": "Kim"
+        },
+        "version": "1.0"
     },
-    "basePath": "/api/v1",
+    "host": "localhost:8080",
+    "basePath": "/",
     "paths": {
         "/restaurants": {
             "get": {
-                "description": "do ping",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -19,13 +20,104 @@
                     "restaurants"
                 ],
                 "summary": "List all restaurants defined",
+                "operationId": "get-restaurants",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "json"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.restaurant"
+                            }
                         }
                     }
+                }
+            },
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Add a new restaurant",
+                "operationId": "create-restaurant",
+                "parameters": [
+                    {
+                        "description": "Restaurant",
+                        "name": "restaurant",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.restaurant"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/main.restaurant"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "an error occurred while creating restaurant"
+                    }
+                }
+            }
+        },
+        "/restaurants/{city}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "restaurants"
+                ],
+                "summary": "List all restaurants located in given city",
+                "operationId": "get-restaurants-by-city",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "City",
+                        "name": "city",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.restaurant"
+                        }
+                    },
+                    "404": {
+                        "description": "restaurants not found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.restaurant": {
+            "description": "Restaurant information with name, city, location, instagram link and a short description",
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "instagram": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         }
