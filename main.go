@@ -4,9 +4,14 @@ import (
     "net/http"
 
     "github.com/gin-gonic/gin"
+    swaggerfiles "github.com/swaggo/files"
+    ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// Data structure
+
+// Restaurant model info
+// @Description Restaurant information
+// @Description with name, city, location, instagram link and a short description
 type restaurant struct {
     Name     string  `json:"name"`
     City  string  `json:"city"`
@@ -27,10 +32,22 @@ func main() {
     router.GET("/restaurants/:city", getRestaurantsByCity)
     router.POST("/restaurants", postRestaurants)
 
+    router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
     router.Run("localhost:8080")
 }
 
-// getRestaurants responds with the list of all restaurants as JSON
+// @BasePath /api/v1
+
+// PingExample godoc
+// @Summary List all restaurants defined
+// @Schemes
+// @Description do ping
+// @Tags restaurants
+// @Accept json
+// @Produce json
+// @Success 200 {json} list of restaurants
+// @Router /restaurants [get]
 func getRestaurants(c *gin.Context) {
     c.IndentedJSON(http.StatusOK, restaurants)
 }

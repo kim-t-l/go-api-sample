@@ -1,0 +1,23 @@
+basePath: /api/v1
+info:
+  contact: {}
+  description: |-
+    Restaurant information
+    with name, city, location, instagram link and a short description
+paths:
+  /restaurants:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: json
+      summary: List all restaurants defined
+      tags:
+      - restaurants
+swagger: "2.0"
